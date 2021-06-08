@@ -224,3 +224,18 @@ a.link {
     display: unset;
   }
 }
+@media only screen and (min-width: 1025px) {
+  .chat-messages-wrapper .chat-messages {
+    height: 286;
+  }
+}
+@media screen and (max-width: 600px) {
+  .chat-messages-wrapper .chat-messages {
+    height: 212px;
+  }
+}
+@media screen and (max-width: 400px) {
+  .chat-messages-wrapper .chat-messages {
+    height: 310px;
+  }
+}
