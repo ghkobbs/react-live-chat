@@ -45,4 +45,10 @@ You will also see any lint errors in the console.
 ## Production
 App can be deployed using heroku. More info on that [here](https://devcenter.heroku.com/articles/git)
 
+The following environment variables are required to run in production.
+|  Variable |  Description | Required
+|---|---|---|
+|MONGO_DB_URI| Atlas mongoDB connection string | Yes
+|JWT_SECRET_KEY|Any random characters. Will be used to sign JWT session|Yes
+
 # Thank you 🙏
