@@ -109,6 +109,7 @@ a.link {
   grid-template-columns: 400px 1fr;
   border: 1px solid #bbbbbb;
   border-radius: 5px;
+  height: calc(90vh - 118px);
 }
 .chat-layout.hide-online-users {
   grid-template-columns: 1fr;
@@ -130,7 +131,7 @@ a.link {
 .chat-sidebar .chat-users {
   margin: 0;
   border-right: 1px solid var(--color-grey-light);
-  height: calc(100% - 63.33px);
+  height: calc(100vh - 278.33px);
   overflow: hidden;
   overflow-y: auto;
 }
@@ -155,7 +156,7 @@ a.link {
   right: 10px;
 }
 .chat-messages-wrapper .chat-messages {
-  height: 500px;
+  height: calc(100% - 207px);
   padding: 0 20px;
   overflow: hidden;
   overflow-y: auto;
