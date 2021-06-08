@@ -1,9 +1,9 @@
 const express = require('express');
-const socketio = require('socket.io');
 const http = require('http');
 const app = express();
 const mongoose = require('mongoose');
 const server = http.createServer(app);
+const socketio = require('socket.io');
 const io = socketio(server);
 
 const path = require('path');
@@ -50,23 +50,22 @@ process.on('unhandledRejection', (reason, promise) => {
 	// Application specific logging, throwing an error, or other logic here
 });
 
-// eslint-disable-next-line
-server.listen(PORT, () => console.log(`Server is running on ${PORT}`));
-
 io.on("connection", (socket) => {
-
-	socket.on('loggedIn', ({ user }) => {
-		socket.emit("welcome", `Welcome ${user.name}`);
-		socket.broadcast.emit("welcome", `${user.name} is online.`);
-	});
+  socket.on("loggedIn", ({ user }) => {
+    socket.emit("welcome", `Welcome ${user.name}`);
+    socket.broadcast.emit("welcome", `${user.name} is online.`);
+  });
 
   socket.on("chatMessage", (data) => {
     socket.broadcast.emit("showChatMessages", data);
   });
 
-	socket.on("disconnect", (reason) => {
+  socket.on("disconnect", (reason) => {
     socket.emit("UserLogout", reason);
   });
-
 });
+
+// eslint-disable-next-line
+server.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+
 

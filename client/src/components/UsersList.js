@@ -68,12 +68,12 @@ const UsersList = function (props) {
 
 	useEffect(() => {
     socket = io(BACKEND_URL);
-    if( user ) {
+    
       socket.on("welcome", (data) => {
         store.dispatch(getUsers());
       });
-    }
-	}, [user])
+      
+	}, [])
 
   return (
     <>

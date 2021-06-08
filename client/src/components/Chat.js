@@ -27,7 +27,7 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
     socket.on("showChatMessages", (data) => {
       getChats(data.user.id);
     });
-  });
+  },[]);
 
   useEffect(() => {
     const chatScreen = document.querySelector(".chat-messages");

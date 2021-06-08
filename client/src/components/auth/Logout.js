@@ -26,7 +26,7 @@ const Logout = function({logout}) {
     return () => {
       socket.off("UserLogout", logoutListner);
     };
-  });
+  },[]);
 
   const logoutUser = () => {
     logout();
