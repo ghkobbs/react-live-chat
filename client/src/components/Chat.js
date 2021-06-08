@@ -50,8 +50,12 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
   }, [user]);
   
 
-  // useEffect(() => {
-  // })
+  useEffect(() => {
+    const userItems = document.querySelectorAll(".chat-users-item");
+    userItems.forEach(element => element.addEventListener('click', () => {
+      setShowOnlineUsers(!showOnlineUsers);
+    }));
+  })
 
   function sendMessage(e) {
     e.preventDefault();
@@ -97,8 +101,6 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
               </div>
               <ul className="chat-users">
                 <UserLists
-                  setShowOnlineUsers={setShowOnlineUsers}
-                  showOnlineUsers={showOnlineUsers}
                   setReceipient={setReceipient}
                 />
               </ul>
