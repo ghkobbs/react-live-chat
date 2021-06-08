@@ -18,7 +18,9 @@ const UsersList = function (props) {
     blockUser,
     unBlockUser,
     currentUser,
-    setReceipient
+    setReceipient,
+    setShowOnlineUsers,
+    ShowOnlineUsers,
   } = props;
 
   function fetchUserChats(e){
@@ -33,6 +35,7 @@ const UsersList = function (props) {
       }
       
       setReceipient(id);
+      setShowOnlineUsers(!ShowOnlineUsers);
       getChats(id);
     }
   }

@@ -73,13 +73,20 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
         <div className="container">
           <div className="chat-button-groups">
             <div className="button-wrapper">
-              <button type="button" onClick={() => setShowOnlineUsers(!showOnlineUsers)}>
+              <button
+                type="button"
+                onClick={() => setShowOnlineUsers(!showOnlineUsers)}
+              >
                 {showOnlineUsers ? "Hide Online Users" : "Show Online Users"}
               </button>
             </div>
             <Logout />
           </div>
-          <div className={ showOnlineUsers ? "chat-layout" : "chat-layout hide-online-users" }>
+          <div
+            className={
+              showOnlineUsers ? "chat-layout" : "chat-layout hide-online-users"
+            }
+          >
             <div className="chat-sidebar">
               <div className="current-user-wrapper">
                 <div>
@@ -89,7 +96,11 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
                 </div>
               </div>
               <ul className="chat-users">
-                <UserLists setReceipient={setReceipient} />
+                <UserLists
+                  setShowOnlineUsers={setShowOnlineUsers}
+                  showOnlineUsers={showOnlineUsers}
+                  setReceipient={setReceipient}
+                />
               </ul>
             </div>
             <div className="chat-messages-wrapper">
