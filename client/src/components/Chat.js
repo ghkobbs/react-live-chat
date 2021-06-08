@@ -52,8 +52,13 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
 
   useEffect(() => {
     const userItems = document.querySelectorAll(".chat-users-item");
+    const chatLayout = document.querySelector(".chat-layout");
+
     userItems.forEach(element => element.addEventListener('click', () => {
-      setShowOnlineUsers(!showOnlineUsers);
+      if(showOnlineUsers){
+        chatLayout.classList.add("hide-online-users");
+        setShowOnlineUsers(!showOnlineUsers);
+      }
     }));
   })
 
