@@ -1,0 +1,19 @@
+:root {
+	--color-background: #f7f7f7;
+	--color-grey-darker: #6b6b6b;
+	--color-grey-dark: #d2cfcf;
+	--color-grey-light: #e2e2e2;
+	--color-grey-lighter: #efeeee;
+	--color-outline: #8f8ff3;
+	--color-primary: #37344a;
+	--color-primary-hover: #37484a;
+	--color-chat-bg1: #5c91e0;
+	--color-chat-bg2: #a3c0cc;
+	--color-white: #ffffff;	
+	--color-danger-border: #dc5454;
+	--color-danger-text: #650202;
+	--color-danger-bg: #f7a5a5;
+	--color-success-border: #54dc59;
+	--color-success-text: #086502;
+	--color-success-bg: #a5f7af;
+}
