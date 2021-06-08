@@ -111,11 +111,16 @@ a.link {
   display: none;
 }
 .chat-layout {
-  display: grid;
-  grid-template-columns: 400px 1fr;
+  display: flex;
   border: 1px solid #bbbbbb;
   border-radius: 5px;
   height: calc(95% - 62px);
+}
+.chat-sidebar {
+  width: 30%;
+}
+.chat-messages-wrapper {
+  width: 70%;
 }
 .chat-sidebar .current-user-wrapper {
   padding: 20px;
@@ -211,7 +216,6 @@ a.link {
 }
 @media screen and (max-width: 1024px) {
   .chat-layout {
-    grid-template-columns: 1fr;
     height: calc(100% - 62px);
   }
   .chat-layout.hide-online-users .chat-sidebar {
@@ -225,5 +229,8 @@ a.link {
   }
   .chat-button-groups .button-wrapper:first-child {
     display: inline-block;
+  }
+  .chat-sidebar, .chat-messages-wrapper {
+    width: 100%;
   }
 }
