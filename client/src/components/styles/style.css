@@ -112,7 +112,7 @@ a.link {
 }
 .chat-layout {
   display: flex;
-  border: 1px solid #bbbbbb;
+  border: 1px solid var(--color-grey-light);
   border-radius: 5px;
   height: calc(95% - 62px);
 }
@@ -136,9 +136,10 @@ a.link {
 .chat-sidebar .chat-users {
   margin: 0;
   border-right: 1px solid var(--color-grey-light);
-  height: calc(100vh - 278.33px);
+  height: calc(100% - 85px);
   overflow: hidden;
   overflow-y: auto;
+  background-color: var(--color-white);
 }
 .chat-sidebar .chat-users li {
   position: relative;
@@ -147,7 +148,7 @@ a.link {
   cursor: pointer;
 }
 .chat-sidebar .chat-users li:hover {
-  background-color: var(--color-grey-lighter);
+  background-color: var(--color-grey-lighter-x2);
 }
 .chat-sidebar .chat-users li:not(:last-child){
   border-bottom: 1px solid var(--color-grey-light);
@@ -165,6 +166,7 @@ a.link {
   padding: 0 20px;
   overflow: hidden;
   overflow-y: auto;
+  background-color: var(--color-white);
 }
 .bubble-wrapper {
   margin-bottom: 30px;

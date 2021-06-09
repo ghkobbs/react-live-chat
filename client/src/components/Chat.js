@@ -74,6 +74,15 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
       clearForm();
     }
   }
+
+  function enterToSend(e) {
+    
+    e = e || window.event;
+    let charCode = e.keyCode || e.which;
+    if(charCode === 13) {
+      sendMessage(e);
+    }
+  };
   
 
   return (
@@ -105,9 +114,7 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
                 </div>
               </div>
               <ul className="chat-users">
-                <UserLists
-                  setReceipient={setReceipient}
-                />
+                <UserLists setReceipient={setReceipient} />
               </ul>
             </div>
             <div className="chat-messages-wrapper">
@@ -158,6 +165,7 @@ const Chat = function ({ error, messages, user, currentUser, addChat, getChats, 
                     <textarea
                       name="message"
                       onChange={handleChange}
+                      onKeyPress={enterToSend}
                       value={inputs.message}
                     />
                   </div>
