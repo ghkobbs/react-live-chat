@@ -13,24 +13,15 @@ const Logout = function({logout}) {
 
   useEffect(() => {
     socket = io(BACKEND_URL);
-    
-    const logoutListner = (...data) => {
-      setTimeout(() => {
-        logout();
-        store.dispatch(getUsers());
-      }, 5000)
-    };
+    socket.on("UserLogout", (data) => {
+      store.dispatch(getUsers());
+    });
 
-    socket.on("UserLogout", logoutListner);
-
-    return () => {
-      socket.off("UserLogout", logoutListner);
-    };
   },[]);
 
   const logoutUser = () => {
-    logout();
     socket.disconnect();
+    logout();
     store.dispatch(getUsers());
   }
 

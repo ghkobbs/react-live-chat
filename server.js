@@ -60,8 +60,8 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("showChatMessages", data);
   });
 
-  socket.on("disconnect", (reason) => {
-    socket.emit("UserLogout", reason);
+  socket.on("disconnect", (data) => {
+    socket.broadcast.emit("UserLogout", data);
   });
 });
 
