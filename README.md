@@ -50,5 +50,11 @@ The following environment variables are required to run in production.
 |---|---|---|
 |MONGO_DB_URI| Atlas mongoDB connection string | Yes
 |JWT_SECRET_KEY|Any random characters. Will be used to sign JWT session|Yes
+|AUTHO_DOMAIN|Auth0 domain. Can be found in the settings area of your auth0 app.|Yes
+|CLIENT_ID|Auth0 Client ID. Can be found in the settings area of your auth0 app.|Yes
+|CLIENT_SECRET|Auth0 Client Secret. Can be found in the settings area of your auth0 app.|Yes
+|REDIRECT_URI|Auth0 Callback Url. Can be found in the settings area of your auth0 app.|Yes
+
+>Note: Make sure to update the same information in `client -> config -> default.js` file.
 
 # Thank you 🙏
