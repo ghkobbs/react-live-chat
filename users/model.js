@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -13,7 +11,6 @@ const ObjectIdValue = mongoose.Types.ObjectId;
 const userSchema = Schema({
 	name: { type: String, required: true },
 	email: { type: String, required: true, unique: true },
-	password: { type: String, required: true },
 	blockList: { type: Array, required: false, default: [] },
 	created: { type: Date, required: true },
 });
@@ -30,48 +27,15 @@ const createUser = (params) =>
 	new Promise((resolve, reject) => {
 		try {
 			let user = new User({
-				name: params.name,
+				name: params.name.split('@').length > 0 ? params.nickname : params.name,
 				email: params.email,
-				password: params.password,
 				created: new Date(),
 			});
 
-			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(user.password, salt, async (err, hash) => {
-					if (err) return reject(err);
-
-					user.password = hash;
-					user.save()
-						.then((user) => {
-
-							const data = {
-								id: user.id,
-								name: user.name,
-								email: user.email,
-							};
-
-							// Sign json web token with our secret
-							jwt.sign(data, process.env.JWT_SECRET_KEY, {
-                expiresIn: 3600,
-              }, (err, token) => {
-                if (err) return reject(err);
-
-                // Add logged in user to online list
-                addOnlineUser(user.id);
-								
-                // Return our user object along side the token
-                return resolve({
-                  token,
-                  user: {
-                    id: user.id,
-                    name: user.name,
-                    email: user.email,
-                  },
-                });
-              });
-						})
+			user.save()
+				.then((user) => {
+					return resolve(user);
 				});
-			});
 		} catch (e) {
 			return reject(e);
 		}

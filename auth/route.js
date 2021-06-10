@@ -1,79 +1,74 @@
 const express = require('express');
 
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require("dotenv");
 
 dotenv.config();
-const { fetchUserByEmail, fetchUserById, addOnlineUser, deleteOnlineUser } = require("../users/model");
+const { fetchUserByEmail, fetchUserById, addOnlineUser, deleteOnlineUser, createUser } = require("../users/model");
+const oAuth = require('../middleware/auth0');
 const auth = require('../middleware/auth');
 
-// @route POST api/auth
-// @desc Authenticate users
-// @access Public
-router.post('/', (req, res) => {
-	const { email, password } = req.body;
+// @route Get api/auth/oAuth
+// @desc Authenticate users of auth0
+// @access Private
+router.get('/oAuth', oAuth, async (req, res) => {
 
-	if( !email || !password ) {
-		return res.status(400).json({ status: "failed", error: "Please enter all fields."});
-	}
+	const { email, name, nickname } = req.user;
+
+  function generateToken(user) {
+
+    const data = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+
+    // Sign json web token with our secret
+    jwt.sign(data, process.env.JWT_SECRET_KEY, {
+      expiresIn: 3600,
+    }, (err, token) => {
+      if (err) return reject(err);
+
+      // Add logged in user to online list
+      addOnlineUser(user.id);
+
+      // Return our user object along side the token
+      return res.status(200).json({
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          blockList: user.blockList,
+        },
+      });
+    });
+  }
+
+  if (!email || !name) {
+    return res
+      .status(400)
+      .json({ status: "failed", error: "Please enter all fields." });
+  }
 
   try {
-    fetchUserByEmail(email)
-      .then((user) => {
+    const existingUser = await fetchUserByEmail(email);
+
+    if(existingUser) {
+      return await generateToken(existingUser)
+    }
+    
+    createUser(req.user)
+      .then(async (user) => {
         if (!user)
           return res
             .status(400)
             .json({ status: "failed", error: "User does not exist." });
-
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-          if (!isMatch)
-            return res
-              .status("400")
-              .json({ status: "failed", error: "Invalid Credentials" });
-
-          const data = {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            blockList: user.blockList
-          };
-
-          // Sign json web token with our secret
-          jwt.sign(
-            data,
-            process.env.JWT_SECRET_KEY,
-            {
-              expiresIn: 3600,
-            },
-            (err, token) => {
-              if (err)
-                return res.status("400").json({
-                  status: "failed",
-                  error:
-                    "An error occurred while processing your last request.",
-                });
-
-              // Add logged in user to online list
-              addOnlineUser(user.id);
-
-              // Return our user object along side the token
-              return res.status(200).json({
-                token,
-                user: {
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                  blockList: user.blockList,
-                },
-              });
-            }
-          );
-        });
-      })
-  }
-  catch(err) {
+        
+        return await generateToken(user);
+    });
+  } catch (err) {
     return res.status(400).json({ status: "failed", error: err.message });
   }
 });
@@ -107,11 +102,11 @@ router.get("/logout", auth, (req, res) => {
         return res
           .status(400)
           .json({ status: "failed", error: "User does not exist." });
-			return res.status(200).json(user);
-		})
-		.catch((err) =>
-			res.status(400).json({ status: "failed", error: err.message })
-		);
+      return res.status(200).json(user);
+    })
+    .catch((err) =>
+      res.status(400).json({ status: "failed", error: err.message })
+    );
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { OnlineUsers, createUser, addToBlockList, removeFromBlockList } = require("./model");
+const { OnlineUsers, addToBlockList, removeFromBlockList } = require("./model");
 const auth = require('../middleware/auth');
 
 // @route GET api/users
@@ -12,23 +12,6 @@ router.get('/', auth, (req, res) => {
 		.populate('userId', '-password')
     .then((users) => res.json(users))
     .catch((err) => res.json({ status: "failed", error: err.message }));
-});
-
-// @route POST api/users
-// @desc Register new user
-// @access Public
-router.post('/', (req, res) => {
-	const { name, email, password } = req.body;
-
-	if (!name || !email || !password) {
-		return res
-      .status(400)
-      .json({ status: "failed", error: "Please enter all fields." });
-	}
-
-	createUser(req.body)
-		.then((user) => res.json(user))
-		.catch((err) => res.json({ status: 'failed', error: err.message }));
 });
 
 // @route POST api/users/block
