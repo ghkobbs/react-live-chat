@@ -43,13 +43,24 @@ a.link {
   margin: auto;
 }
 .auth-inner-wrapper .auth-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 50px;
+  margin: auto;
+  width: 600px;
+  max-width: 95%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .auth-inner-wrapper {
   height: 100vh;
   display: flex;
+}
+.auth-inner-wrapper .auth-wrapper .auth-login-wrapper h2 {
+    text-align: center;
+}
+.auth-inner-wrapper .auth-wrapper .auth-login-wrapper p {
+  text-align: center;
+  font-size: 1.2rem;
 }
 .auth-wrapper .input-wrapper {
   margin-bottom: 20px;
@@ -85,7 +96,7 @@ a.link {
   background-color: var(--color-primary-hover);
 }
 .auth-wrapper .button-wrapper {
-  text-align: left;
+  text-align: center;
 }
 .alert {
   padding: 15px 20px;

@@ -49,6 +49,7 @@ const Auth = function ({ error, authorizeAuth0User, isAuthenticated, clearErrors
                 </div>
               ) : null}
               <h2>Login</h2>
+              <p>You must login first to continue. Click the button below to log in with your auth0 account.</p>
               <div className="button-wrapper">
                 <button type="button" onClick={authorizeNewAuth0User}>
                   Log in with Auth0
