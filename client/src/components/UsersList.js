@@ -20,7 +20,7 @@ const UsersList = function (props) {
     currentUser,
     setReceipient,
   } = props;
-
+  console.log({ currentUser });
   function fetchUserChats(e){
     e.preventDefault();
     if( e.target.localName !== 'button') {
@@ -66,9 +66,9 @@ const UsersList = function (props) {
 	useEffect(() => {
     socket = io(BACKEND_URL);
     
-      socket.on("welcome", (data) => {
-        store.dispatch(getUsers());
-      });
+    socket.on("welcome", (data) => {
+      store.dispatch(getUsers());
+    });
       
 	}, [])
 

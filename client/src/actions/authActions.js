@@ -8,8 +8,6 @@ import {
   USERS_LOADING,
   USERS_LOADING_ERROR,
   AUTH_ERROR,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
   LOGOUT_SUCCESS,
   LOGOUT_FAIL,
   REGISTER_SUCCESS,
@@ -70,53 +68,18 @@ export const unBlockUser = (id) => (dispatch, getState) => {
     });
 };
 
-// Login existing user
-export const loginUser = ({ email, password }) => (dispatch, getState) => {
-
-	const body = JSON.stringify({ email, password });
-	axios
-    .post("/api/auth", body, axiosConfig())
+// Register new auth0 user
+export const authorizeAuth0User = (code) => (dispatch,getState) => {
+  axios
+    .get("/api/auth/oAuth", axiosConfig(() => code))
     .then((response) => {
-      
       dispatch({ type: USERS_LOADING });
 
       axios
-        .get("/api/users", axiosConfig(() => response.data.token))
-        .then((res) => {
-          dispatch({ type: USERS_LOADED, payload: res.data });
-          dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-        })
-        .catch((err) => {
-          dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-          dispatch(
-            returnErrors(
-              err.response.data,
-              err.response.status,
-              "USERS_LOADING_ERROR"
-            )
-          );
-          dispatch({ type: USERS_LOADING_ERROR });
-        });
-
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL'));
-      dispatch({ type: LOGIN_FAIL });
-    });
-};
-
-// Register new user
-export const registerUser = ({ name, email, password }) => dispatch => {
-
-	const body = JSON.stringify({ name, email, password });
-	axios
-    .post("/api/users", body, axiosConfig())
-    .then((response) => {
-            
-      dispatch({ type: USERS_LOADING });
-
-      axios
-        .get("/api/users", axiosConfig(() => response.data.token))
+        .get(
+          "/api/users",
+          axiosConfig(() => response.data.token)
+        )
         .then((res) => {
           dispatch({ type: USERS_LOADED, payload: res.data });
           dispatch({ type: REGISTER_SUCCESS, payload: response.data });
@@ -134,12 +97,14 @@ export const registerUser = ({ name, email, password }) => dispatch => {
         });
     })
     .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "REGISTER_FAIL")
+      );
       dispatch({ type: REGISTER_FAIL });
     });
 };
 
-// Register new user
+// Logout user
 export const logout = () => (dispatch, getState) => {
   axios
     .get("/api/auth/logout", axiosConfig(getState))

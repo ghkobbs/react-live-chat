@@ -1,50 +1,41 @@
 import React, { useEffect } from 'react';
 
 import '../styles/style.css';
-import useForm from '../../lib/useForm';
 import { connect } from "react-redux";
 import PropTypes from 'prop-types';
-import { registerUser, loginUser } from "../../actions/authActions";
+import { authorizeAuth0User } from "../../actions/authActions";
 import { getUsers } from "../../actions/userActions";
 import { clearErrors } from '../../actions/errorActions';
+import { REDIRECT_URI, DOMAIN, CLIENT_ID, AUDIENCE } from "../../config/default";
 
-const Auth = function ({ error, registerUser, loginUser, clearErrors }) {
-  const { inputs, handleChange } = useForm({});
-
-  const registerNewUser = (e) => {
-
+const Auth = function ({ error, authorizeAuth0User, isAuthenticated, clearErrors }) {
+  const authorizeNewAuth0User = async () => {
     clearErrors();
 
-    e.preventDefault();
+    const responseType = "code";
 
-    const { name, register_email, register_password } = inputs;
+    const response = await fetch(
+      `https://${DOMAIN}/authorize?` +
+        `client_id=${CLIENT_ID}` +
+        `&audience=${AUDIENCE}` +
+        `&response_type=${responseType}` +
+        `&redirect_uri=${REDIRECT_URI}` +
+        `&scope=openid profile email`,
+      {
+        redirect: "manual",
+      }
+    );
 
-    const newUser = {
-      name,
-      email: register_email,
-      password: register_password,
-    };
-
-    // Attempt to register new user
-    registerUser(newUser);
+    window.location.replace(response.url);
   };
 
-  const loginExistingUser = (e) => {
+  const code = window.location.href.split("=")[1];
 
-    clearErrors();
-
-    e.preventDefault();
-
-    const { email, password } = inputs;
-
-    const user = {
-      email,
-      password,
-    };
-
-    // Attempt to register new user
-    loginUser(user);
-  };
+  useEffect(() => {
+    if (code && isAuthenticated === false) {
+      authorizeAuth0User(code);
+    }
+  }, [code, isAuthenticated]);
 
   return (
     <div className="auth-outer-wrapper">
@@ -58,79 +49,12 @@ const Auth = function ({ error, registerUser, loginUser, clearErrors }) {
                 </div>
               ) : null}
               <h2>Login</h2>
-              <form onSubmit={loginExistingUser}>
-                <div className="input-wrapper">
-                  <label htmlFor="email">Email</label>
-                  <input
-                    type="text"
-                    name="email"
-                    id="email"
-                    placeholder="Email"
-                    value={inputs.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="input-wrapper">
-                  <label htmlFor="password">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Password"
-                    value={inputs.password}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="button-wrapper">
-                  <button type="submit">Log in</button>
-                </div>
-              </form>
-            </div>
-            <div className="auth-register-wrapper">
-              {error.id === "REGISTER_FAIL" ? (
-                <div className="alert alert__danger">
-                  <p>{error.error.error}</p>
-                </div>
-              ) : null}
-              <h2>Register</h2>
-              <form onSubmit={registerNewUser}>
-                <div className="input-wrapper">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    placeholder="Name"
-                    value={inputs.name}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="input-wrapper">
-                  <label htmlFor="register_email">Email</label>
-                  <input
-                    type="text"
-                    name="register_email"
-                    id="register_email"
-                    placeholder="Email"
-                    value={inputs.register_email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="input-wrapper">
-                  <label htmlFor="register_password">Password</label>
-                  <input
-                    type="password"
-                    name="register_password"
-                    id="register_password"
-                    placeholder="Password"
-                    value={inputs.register_password}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="button-wrapper">
-                  <button type="submit">Register</button>
-                </div>
-              </form>
+              <p>You must login first to continue. Click the button below to log in with your auth0 account.</p>
+              <div className="button-wrapper">
+                <button type="button" onClick={authorizeNewAuth0User}>
+                  Log in with Auth0
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -143,9 +67,8 @@ const Auth = function ({ error, registerUser, loginUser, clearErrors }) {
 Auth.propTypes = {
   isAuthenticated: PropTypes.bool,
   error: PropTypes.object.isRequired,
-  registerUser: PropTypes.func.isRequired,
-  loginUser: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired
+  authorizeAuth0User: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -153,4 +76,4 @@ const mapStateToProps = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToProps, { registerUser, loginUser, clearErrors, getUsers })(Auth);
+export default connect(mapStateToProps, { clearErrors, getUsers, authorizeAuth0User })(Auth);

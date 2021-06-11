@@ -4,12 +4,12 @@ import PropTypes from "prop-types";
 import { logout } from '../../actions/authActions';
 import { getUsers } from '../../actions/userActions';
 import store from  '../../store';
-import { BACKEND_URL } from "../../config/default";
+import { BACKEND_URL, REDIRECT_URI, DOMAIN, CLIENT_ID } from "../../config/default";
 import io from "socket.io-client";
 
-
 let socket;
-const Logout = function({logout}) {
+let response;
+const Logout = function({logout, user}) {
 
   useEffect(() => {
     socket = io(BACKEND_URL);
@@ -18,12 +18,26 @@ const Logout = function({logout}) {
     });
 
   },[]);
+  
+  const logoutUser = async () => {
+    response = await fetch(
+      `https://${DOMAIN}/logout?client_id=${CLIENT_ID}&returnTo=${REDIRECT_URI}`,
+      { redirect: "manual" }
+    );
 
-  const logoutUser = () => {
     socket.disconnect();
     logout();
     store.dispatch(getUsers());
+    
   }
+
+  useEffect(() => {
+    if (response) {
+      setTimeout(() => {
+        window.location.replace(response.url);
+      }, 5000)
+    }
+  }, [user]);
 
 	return (
     <>
@@ -38,7 +52,8 @@ const Logout = function({logout}) {
 }
 
 Logout.propTypes = {
-	logout: PropTypes.func.isRequired
+	logout: PropTypes.func.isRequired,
+	user: PropTypes.object.isRequired
 };
 
 
